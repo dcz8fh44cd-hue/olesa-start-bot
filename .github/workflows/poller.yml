@@ -15,18 +15,15 @@ concurrency:
 jobs:
   poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
+          fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Poll Telegram updates
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           python bot.py
-          bash commit_offset.sh
