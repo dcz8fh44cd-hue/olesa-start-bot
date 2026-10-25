@@ -1,7 +1,9 @@
 // Telegram webhook for @olesa_start_guide_bot — Cloudflare Workers
 // Secret binding: TG_TOKEN (bot token from BotFather)
+// Secret binding: YK_SHOP_ID, YK_SECRET_KEY (опционально, для автовыдачи после оплаты ЮKassa)
 
 const LEAD = "https://start-blog-guide.spru.site/files/l-2c8e40.pdf";
+const GUIDE = "https://start-blog-guide.spru.site/files/g-7f3a91.pdf";
 const SITE = "https://start-blog-guide.spru.site/";
 
 let TOKEN = "";
@@ -11,6 +13,8 @@ const BTN = [
   [{ text: "Гайд «СТАРТ» — 1 490 ₽", callback_data: "buy" }],
   [{ text: "Открыть лендинг", url: SITE }],
 ];
+
+const SITE_BTN = [[{ text: "Открыть лендинг", url: SITE }]];
 
 const WELCOME =
   "<b>СТАРТ</b> — гайд по ведению блога от практика.\n\n" +
@@ -41,7 +45,9 @@ export default {
     TOKEN = env.TG_TOKEN || "";
     const url = new URL(request.url);
 
-    if (url.pathname === "/health") return new Response(TOKEN ? "ok" : "no-token");
+    if (url.pathname === "/health") {
+      return new Response(TOKEN ? "ok" : "no-token");
+    }
 
     if (url.pathname === "/setwebhook") {
       const r = await api("setWebhook", {
@@ -69,16 +75,32 @@ export default {
     if (url.pathname !== "/tg") return new Response("not found", { status: 404 });
 
     let body = {};
-    try { body = await request.json(); } catch (e) {}
+    try {
+      body = await request.json();
+    } catch (e) {}
 
     const msg = body.message || {};
     const chatId = msg.chat && msg.chat.id;
     const text = (msg.text || "").toLowerCase();
     if (chatId !== undefined) {
-      if (text.startsWith("/start") || text.startsWith("/guide") || text.includes("чек") || text.includes("гайд") || text.includes("шаг")) {
+      if (text.startsWith("/start")) {
         await send(chatId, WELCOME, BTN);
+      } else if (text.startsWith("/guide") || text.includes("гайд")) {
+        await send(
+          chatId,
+          "Гайд «СТАРТ» — 8 модулей: от профиля до первой рекламы, контент-план на 30 дней, 100 идей для Reels, шаблон медиакита, письма брендам и договор.\n\nЦена — 1 490 ₽. Нажми кнопку ниже, оплата и файлы на лендинге.",
+          BTN
+        );
+      } else if (text.startsWith("/help") || text.includes("помощ") || text.includes("как")) {
+        await send(
+          chatId,
+          "Я бот СТАРТ. Команды:\n/start — приветствие и чек-лист\n/guide — про гайд\n/help — эта справка\n\nЕщё есть бесплатный чек-лист «10 шагов до первой рекламы» и гай� «СТАРТ» за 1 490 ₽.",
+          BTN
+        );
+      } else if (text.includes("чек") || text.includes("шаг")) {
+        await send(chatId, "Чек-лист «10 шагов до первой рекламы» — 12 страниц, по одному шагу в день. Нажми кнопку, пришлю PDF.", BTN);
       } else {
-        await send(chatId, "Нажми кнопку ниже — пришлю чек-лист. По гайду и разбору — @hair_kukla.", BTN);
+        await send(chatId, "Нажми кнопку ниже — пришлю чек-лист. По гай�у и разбору — @hair_kukla.", BTN);
       }
     }
 
@@ -86,9 +108,13 @@ export default {
     if (cb && cb.from) {
       const id = cb.from.id;
       if (cb.data === "lead") {
-        await sendDoc(id, "Чек-лист «10 шагов до первой рекламы». Один шаг в день. Гайд «СТАРТ» — @hair_kukla.", LEAD);
+        await sendDoc(id, "Чек-лист «10 шагов до первой рекламы». Один шаг в день. Гай� «СТАРТ» — @hair_kukla.", LEAD);
       } else if (cb.data === "buy") {
-        await send(id, "Гайд «СТАРТ» — 1 490 ₽: 8 модулей, контент-план на 30 дней, 100 идей для Reels, шаблон медиакита, письма брендам, договор.\n\nОплата — по ссылке на лендинге, файлы пришлю сразу.", BTN);
+        await send(
+          id,
+          "Гайд «СТАРТ» — 1 490 ₽: 8 модулей, контент-план на 30 дней, 100 идей для Reels, шаблон медиакита, письма брендам, договор.\n\nОплата — по ссылке на лендинге, файԻы пришлю сразу.",
+          BTN
+        );
       }
     }
     return new Response(JSON.stringify({ ok: true }));
