@@ -35,9 +35,10 @@ def go(ch,t):
 o=-1
 try: o=int(open('offset.txt').read().strip())
 except Exception: pass
-end=time.time()+220
+end=time.time()+55
 while time.time()<end:
-    r=call('getUpdates',{'timeout':30,'offset':o})
+    r=call('getUpdates',{'timeout':45,'offset':o})
+    print('updates:',len(r.get('result',[])),'offset:',o)
     for u in r.get('result',[]):
         ms=u.get('message') or {};ch=ms.get('chat') or {}
         if ch.get('type')=='private':
