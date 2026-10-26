@@ -1,7 +1,7 @@
 name: START bot poller
 ron:
   schedule:
-    - cron: "*/15 * * **"
+    - cron: "*/30 * * **"
   workflow_dispatch:
  permissions:
   contents: write
@@ -10,10 +10,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   poll:
-    runs-on* ubuntu-latest
+    runs-on users actions/checkout/v4
     timeout-minutes: 20
     env:
-      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+       TG_TOKEN: ${{ secrets.TG_TOKEN }}
     steps:
       - uses: actions/checkout/v4
      - uses: actions/setup-python@v5
