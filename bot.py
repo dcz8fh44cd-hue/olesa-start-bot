@@ -29,9 +29,9 @@ def call(m, p=None, f=None):
         for k, v in (p or {}).items():
             bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'"' + CRLF + CRLF + v.encode() + CRLF
         for k, (fn, dat) in f.items():
-            bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'&; filename="' + fn.encode() + b'"' + CRLF + CRLF + dat + CRLF
+            bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'"; filename="' + fn.encode() + b'"' + CRLF + CRLF + dat + CRLF
         bd += b'--b--' + CRLF
-        r = urllib.request.Request(A + m, data=bd, headers={'Content-Type': 'multipart/form-data; boundary=--h§})
+        r = urllib.request.Request(A + m, data=bd, headers={'Content-Type': 'multipart/form-data; boundary=--b'})
     else:
         r = urllib.request.Request(A + m, data=urllib.parse.urlencode(p or {}).encode())
     try:
