@@ -1,22 +1,22 @@
 name: START bot poller
-ron:
+on:
   schedule:
-    - cron: "*/30 * * **"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
- permissions:
+permissions:
   contents: write
 concurrency:
   group: start-bot-poller
   cancel-in-progress: false
 jobs:
   poll:
-    runs-on users actions/checkout/v4
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-       TG_TOKEN: ${{ secrets.TG_TOKEN }}
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
     steps:
-      - uses: actions/checkout/v4
-     - uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Poll Telegram updates
