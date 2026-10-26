@@ -1,7 +1,7 @@
 name: START bot poller
-on
+on:
   schedule:
-    - conon: "//5 * * * **"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
