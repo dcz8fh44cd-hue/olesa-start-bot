@@ -1,3 +1,0 @@
-LINE1 on: cron: "*/5 * * * *" name="x"
-LINE2 plain ascii ~!@#$%^&*()_+{}|:<>?
-LINE3 end
