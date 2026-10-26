@@ -49,10 +49,11 @@ def msg(ch, t, kb):
 
 def go(ch, t, tx):
     t = (t or '').lower()
-    kb_ch = [[{'text': 'Checklist (PDF)', 'url': CL}]]
-    kb_g = [[{'text': 'Guide 1490 RUB', 'url': PD}]]
+    kb_ch = tx.get('kb_start') or [[{'text': 'Checklist (PDF)', 'url': CL}]]
+    kb_p = tx.get('kb_prices') or [[{'text': 'Taries', 'url': PD}]]
+    kb_l = tx.get('kb_landing') or [[{'text': 'Landing', 'url': S}]]
     if t.startswith('/start'):
-        msg(ch, tx.get('start', ''), kb_ch + kb_g)
+        msg(ch, tx.get('start', ''), kb_ch + kb_p)
         try:
             d = get(CL)
             if d:
@@ -60,11 +61,17 @@ def go(ch, t, tx):
         except Exception:
             pass
     elif t.startswith('/guide'):
-        msg(ch, tx.get('guide', ''), [[{'text': 'Taries', 'url': PD}]])
+        msg(ch, tx.get('guide', ''), kb_p)
+    elif t.startswith('/prices') or t.startswith('/price') or t.startswith('/tariff'):
+        msg(ch, tx.get('prices_msg', ''), kb_p)
     elif t.startswith('/help'):
         msg(ch, tx.get('help', ''), [])
     else:
-        msg(ch, tx.get('hello', ''), kb_ch + [[{'text': 'Landing', 'url': S}]])
+        kws = tx.get('kw_price') or []
+        if any(k in t for k in kws):
+            msg(ch, tx.get('prices_msg', ''), kb_p)
+        else:
+            msg(ch, tx.get('hello', ''), kb_ch + kb_p + kb_l)
 
 
 def read_offset():
@@ -97,6 +104,7 @@ while time.time() < end:
     res = r.get('result', [])
     if res:
         print('updates:', len(res), 'offset:', o, flush=True)
+        tx.update(texts())
         for u in res:
             ms = u.get('message') or {}
             ch = ms.get('chat') or {}
