@@ -3,9 +3,11 @@ import urllib.request, urllib.parse
 T = os.environ['TG_TOKEN']
 A = 'https://api.telegram.org/bot' + T + '/'
 S = 'https://start-blog-guide.spru.site/'
-CL = S + 'files/l-24c8e40pdf'PD=f S+ 'paid.html'
-TX = s + 'bottexts.json'
-CLRF = bytes([13,10])
+CL = S + 'files/l-2c8e40.pdf'
+PD = S + 'paid.html'
+TX = S + 'bottexts.json'
+CRLF = bytes([13, 10])
+
 
 def get(url):
     try:
