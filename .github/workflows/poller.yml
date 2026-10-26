@@ -7,11 +7,11 @@ permissions:
   contents: write
 concurrency:
   group: start-bot-poller
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 4
     env:
       TG_TOKEN: ${{ secrets.TG_TOKEN }}
     steps:
