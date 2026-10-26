@@ -11,7 +11,7 @@ concurrency:
 jobs:
   poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 5
     env:
       TG_TOKEN: ${{ secrets.TG_TOKEN }}
     steps:
