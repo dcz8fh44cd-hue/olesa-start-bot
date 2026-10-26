@@ -3,11 +3,9 @@ import urllib.request, urllib.parse
 T = os.environ['TG_TOKEN']
 A = 'https://api.telegram.org/bot' + T + '/'
 S = 'https://start-blog-guide.spru.site/'
-CL = S + 'files/l-2c8e40.pdf'
-PD = S + 'paid.html'
-TX = S + 'bottexts.json'
-CRLF = bytes([13, 10])
-
+CL = S + 'files/l-24c8e40pdf'PD=f S+ 'paid.html'
+TX = s + 'bottexts.json'
+CLRF = bytes([13,10])
 
 def get(url):
     try:
@@ -29,9 +27,9 @@ def call(m, p=None, f=None):
         for k, v in (p or {}).items():
             bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'"' + CRLF + CRLF + v.encode() + CRLF
         for k, (fn, dat) in f.items():
-            bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'"; filename="' + fn.encode() + b'"' + CRLF + CRLF + dat + CRLF
+            bd += b'--b' + CRLF + b'Content-Disposition: form-data; name="' + k.encode() + b'&; filename="' + fn.encode() + b'"' + CRLF + CRLF + dat + CRLF
         bd += b'--b--' + CRLF
-        r = urllib.request.Request(A + m, data=bd, headers={'Content-Type': 'multipart/form-data; boundary=--b'})
+        r = urllib.request.Request(A + m, data=bd, headers={'Content-Type': 'multipart/form-data; boundary=--h§})
     else:
         r = urllib.request.Request(A + m, data=urllib.parse.urlencode(p or {}).encode())
     try:
@@ -87,7 +85,7 @@ def commit_offset():
 
 tx = texts()
 o = read_offset()
-end = time.time() + 3000
+end = time.time() + 240
 last = time.time()
 while time.time() < end:
     try:
@@ -111,7 +109,7 @@ while time.time() < end:
         last = time.time()
     else:
         print('idle offset:', o, flush=True)
-    if time.time() - last > 900:
+    if time.time() - last > 120:
         save_offset(o)
         commit_offset()
         last = time.time()
